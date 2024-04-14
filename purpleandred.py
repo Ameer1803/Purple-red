@@ -13,17 +13,17 @@ class Player(pygame.sprite.Sprite):
         self.image.fill('White')
         self.rect = self.image.get_rect(center = pos)
         self.direction = pygame.math.Vector2()
-        self.speed = 3
+        self.speed = 4
         self.gravity = 0
     
     def input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.gravity = -3
-            self.direction.y = -4
+            self.direction.y = -2
         elif keys[pygame.K_s]:
             self.gravity = 5
-            self.direction.y = 3
+            self.direction.y = 2
         else:
             self.direction.y = 0
 
@@ -52,7 +52,7 @@ class Enemy(pygame.sprite.Sprite):
         image.fill('red')  # Red color, you can replace this with your enemy image
         self.image = image
         self.rect = self.image.get_rect(topleft=(pos[0]+player.rect.centerx,pos[1]))
-        self.speed = 8
+        self.speed = 10
     
     def movement(self,target):
         dx = target[0] - self.rect.centerx
@@ -80,6 +80,8 @@ class CameraGroup(pygame.sprite.Group):
         self.half_w = self.display_surface.get_size()[0] // 2
         self.half_h = self.display_surface.get_size()[1] // 2
         self.ground_surf = pygame.Surface((50000000,10))
+        self.hori_surf = pygame.Surface((100,10))
+        self.hori_surf.fill('violet')
         self.ground_surf.fill('Purple')
         self.ground_rect = self.ground_surf.get_rect(topleft = (-100000,600))
         self.top_surf = self.ground_surf
@@ -98,6 +100,10 @@ class CameraGroup(pygame.sprite.Group):
         top_offset = self.top_rect.topleft - self.offset
         self.display_surface.blit(self.ground_surf,ground_offset)
         self.display_surface.blit(self.top_surf,top_offset)
+        for i in range(-100000,400000,200):
+            self.hori_rect = self.hori_surf.get_rect(topleft = (i,650))
+            hori_offset = self.hori_rect.topleft - self.offset
+            self.display_surface.blit(self.hori_surf,hori_offset)
 
         tutorial_surf = mainfont.render('WASD to move...',False,'Orange')
         gl = sidefont.render('Good luck',False,'white')
@@ -163,7 +169,7 @@ while True:
         pos_x = random.choice([-600,600])
         pos_y = random.randint(150,600)
         elapsed_time = time.time() - last_trigger_time
-        if(count%30==0):
+        if(count%25==0):
             targx = player.rect.centerx
             targy = player.rect.centery
         if elapsed_time>=interval:
