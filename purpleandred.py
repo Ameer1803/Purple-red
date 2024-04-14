@@ -86,7 +86,10 @@ class CameraGroup(pygame.sprite.Group):
         self.top_rect = self.top_surf.get_rect(topleft = (-100000,150))
 
     def center_target_camera(self,target):
-        self.offset.x = target.rect.centerx - self.half_w
+        if target.rect.centerx >200 or target.rect.centerx < 750:
+            self.offset.x = target.rect.centerx - self.half_w
+        else:
+            self.offset.x = 0
 
     def custom_draw(self,player):
         
@@ -95,6 +98,14 @@ class CameraGroup(pygame.sprite.Group):
         top_offset = self.top_rect.topleft - self.offset
         self.display_surface.blit(self.ground_surf,ground_offset)
         self.display_surface.blit(self.top_surf,top_offset)
+
+        tutorial_surf = mainfont.render('WASD to move...',False,'Orange')
+        gl = sidefont.render('Good luck',False,'white')
+        tutorial_rect = tutorial_surf.get_rect(topleft = (200 -camera_group.offset.x, 200-camera_group.offset.y))
+        gl_rect = gl.get_rect(topleft=(200 -camera_group.offset.x, 300-camera_group.offset.y))
+        if(count<300):
+            self.display_surface.blit(tutorial_surf,tutorial_rect)
+            self.display_surface.blit(gl,gl_rect)
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image,offset_pos)
@@ -147,14 +158,7 @@ while True:
 
     if game_active:
         screen.fill('Black')
-        if not score:
-            tutorial_surf = mainfont.render('WASD to move...',False,'Orange')
-            gl = sidefont.render('Good luck',False,'white')
-            tutorial_rect = tutorial_surf.get_rect(topleft = (200 +camera_group.offset.x, 200+camera_group.offset.y))
-            gl_rect = gl.get_rect(topleft=(200 +camera_group.offset.x, 300+camera_group.offset.y))
-        if(count<300):
-            screen.blit(tutorial_surf,tutorial_rect)
-            screen.blit(gl,gl_rect)
+        
         camera_group.update()
         pos_x = random.choice([-600,600])
         pos_y = random.randint(150,600)
