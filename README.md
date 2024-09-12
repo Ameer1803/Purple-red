@@ -1,4 +1,4 @@
-# humanoids_game
+# Purple & Red
 
 Purple & Red alpha ver. 2.0
 
